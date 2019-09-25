@@ -3,6 +3,16 @@ const app: express.Application = express();
 let mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/seminario1');
 
+let db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+/*db.once('open', function() {
+    // we're connected!
+});*/
+let userSchema = new mongoose.Schema({
+    name: String,
+    pass: String
+});
+
 app.use(express.json());
 
 app.get('/all', function (req, res) {
