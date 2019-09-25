@@ -1,5 +1,7 @@
 import express = require('express');
 const app: express.Application = express();
+let mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/seminario1');
 
 app.use(express.json());
 
