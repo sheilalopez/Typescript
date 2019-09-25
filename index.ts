@@ -1,6 +1,8 @@
 import express = require('express');
 const app: express.Application = express();
 
+app.use(express.json());
+
 app.get('/all', function (req, res) {
     let users:{user: string;}[] = [
         {user:'Toni'},
@@ -22,15 +24,15 @@ app.get('/:id', function (req, res) {
 });
 
 app.post('/', function (req, res) {
-    res.status(201).json({ user: 'tobi' });
+    res.status(201).send(req.body);
 });
 
 app.put('/:id', function (req, res) {
-    res.status(201).json({ user: 'tobi' });
+    res.status(201).send(req.body);
 });
 
 app.delete('/:id', function (req, res) {
-    res.status(200);
+    res.status(200).end();
 });
 
 app.listen(3000, function () {
