@@ -1,26 +1,31 @@
 import express = require('express');
-const app: express.Application = express();
-let mongoose = require('mongoose');
+const app = express();
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+
+
+app.use(express.json());
+
 mongoose.connect('mongodb://localhost/seminario1');
 
 let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
-/*db.once('open', function() {
-    // we're connected!
-});*/
-let userSchema = new mongoose.Schema({
-    name: String,
-    pass: String
+db.once('open', function() {
+    console.log('Connected');
 });
 
-app.use(express.json());
 
 app.get('/all', function (req, res) {
-    let users:{user: string;}[] = [
-        {user:'Toni'},
-        {user:'Joan'}
-    ];
-    res.status(200).json(users);
+    //let users:{name: string, pass: string}[] = db.users.find();
+    User.find({}).then(
+        (data) => {
+            console.log(data);
+        }
+
+    );
+
+
+    //res.status(200).json(users);
 });
 
 app.get('/:id', function (req, res) {
