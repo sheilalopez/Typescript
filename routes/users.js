@@ -12,21 +12,65 @@ var UserRouter = /** @class */ (function () {
     }
     UserRouter.prototype.routes = function () {
         this.router.get('/all', this.GetUsers);
-        //this.router.get('/:id',  this.GetUserById);
-        //this.router.post('/', this.verifyToken, this.getUsuarioById);
-        //this.router.put('/:id', this.verifyToken, this.getUsuarioById);
-        //this.router.delete('/:id', this.verifyToken, this.DeleteUser);
+        this.router.get('/:id', this.GetUserById);
+        this.router.post('/', this.CreateUser);
+        this.router.put('/:id', this.UpdateUser);
+        this.router.delete('/:id', this.DeleteUser);
     };
     UserRouter.prototype.GetUsers = function (req, res) {
         user_model_1.default.find({}).then(function (data) {
             var status = 200;
             if (data == null)
                 status = 404;
-            res.statusCode = status;
-            res.json(data);
+            res.status(200).json(data);
         }).catch(function (err) {
-            var status = 500;
-            res.json(err);
+            res.status(500).json(err);
+        });
+    };
+    UserRouter.prototype.GetUserById = function (req, res) {
+        var id = req.params.id;
+        user_model_1.default.findOne({ "_id": id })
+            .then(function (data) {
+            res.status(200).json(data);
+        })
+            .catch(function (err) {
+            res.status(500).json(err);
+        });
+    };
+    UserRouter.prototype.CreateUser = function (req, res) {
+        var email = req.body.email;
+        var name = req.body.name;
+        var pass = req.body.pass;
+        var user = new user_model_1.default({ email: email, name: name, pass: pass });
+        user.save()
+            .then(function (data) {
+            res.status(201).json(data);
+        })
+            .catch(function (err) {
+            res.status(500).json(err);
+        });
+    };
+    UserRouter.prototype.UpdateUser = function (req, res) {
+        var id = req.params.id;
+        var email = req.body.email;
+        var name = req.body.name;
+        var pass = req.body.pass;
+        user_model_1.default.update({ "_id": id }, { $set: { "email": email, "name": name, "pass": pass } })
+            .then(function (data) {
+            res.status(201).json(data);
+        })
+            .catch(function (err) {
+            res.status(500).json(err);
+        });
+    };
+    UserRouter.prototype.DeleteUser = function (req, res) {
+        var id = req.params.id;
+        user_model_1.default.deleteOne({ "_id": id })
+            .then(function (data) {
+            res.status(200).json(data);
+        })
+            .catch(function (err) {
+            res.status(500).json(err);
         });
     };
     return UserRouter;
